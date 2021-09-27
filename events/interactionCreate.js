@@ -8,17 +8,10 @@ module.exports = {
 
     if (!command) return;
 
-    const allowed = command.permissions.reduce((status, permission) => {
+    // if there are no permissions required, don't bother checking
+    const allowed = !command.permissions ? true : command.permissions.reduce((status, permission) => {
       return status && interaction.member.permissions.has(permission);
     }, true);
-
-    /* command.permissions.forEach((permission) => {
-      console.log('Testing permission: ', permission);
-      if (!interaction.member.permissions.has(permission)) {
-        console.log('not enough permissions');
-        return;
-      }
-    }); */
 
     try {
       if (allowed) {

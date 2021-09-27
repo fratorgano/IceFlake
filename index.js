@@ -1,6 +1,14 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json');
+const { token, db } = require('./config.json');
+const MonHandler = require('./mon/monHandler.js');
+const iciclesSchema = require('./mon/monIcicles.js');
+
+// setting up db
+// create a new mongodb handler
+const mon = new MonHandler(db.uri, db.modelName);
+// setting up model for db
+mon.createModel(iciclesSchema);
 
 // Create a new client instance
 const client = new Client({

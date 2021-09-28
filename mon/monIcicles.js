@@ -1,3 +1,4 @@
+// schema for mongodb database
 const schema = {
   _id: String,
   members: [{

@@ -4,6 +4,9 @@ const axios = require('axios');
 
 const { tmdbKey, plexLink } = require('../config.json');
 
+// Command: movie
+// Description: Search for a movie and reply with an embed with the movie info
+// Usage: /movie <movie name> <optional: year>
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('movie')
@@ -20,12 +23,13 @@ module.exports = {
         .setDescription('the year of the movie')
         .setRequired(false),
     ),
-  permissions: [],
   async execute(interaction) {
+    // Get the movie title and year
     const language = 'en-US';
     const movietitle = interaction.options.getString('movietitle');
     const year = interaction.options.getInteger('year');
 
+    // Search the movie in TMDB and get the movieId
     const movieId = await axios
       .get(
         `https://api.themoviedb.org/3/search/movie?api_key=${tmdbKey}&launguage=${language}&query=${movietitle}`,
@@ -48,6 +52,7 @@ module.exports = {
         }
       });
 
+    // Get the movie info based on the movieId
     const movieData = await axios
       .get(
         `https://api.themoviedb.org/3/movie/${movieId}?api_key=${tmdbKey}&language=${language}`,
@@ -56,6 +61,8 @@ module.exports = {
         return movie_response.data;
       });
 
+    // get the cast data and format it to strings,one for actors and one for directors,
+    // sorted by popularity
     const castData = await axios
       .get(
         `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${tmdbKey}`,
@@ -82,6 +89,7 @@ module.exports = {
         return { actors: actorsString, directors: directorsString };
       });
 
+    // Check if the movie is in the Plex library
     const available = await axios
       .get(plexLink)
       .then((response) => {
@@ -96,8 +104,10 @@ module.exports = {
         return false;
       });
 
+    // Create the embed
     const movieEmbed = new MessageEmbed();
 
+    // create the genres string from movieData.genres
     const genresString = movieData.genres
       ? movieData.genres.reduce((acc, genre, index) => {
         if (index == movieData.genres.length - 1) {
@@ -109,10 +119,12 @@ module.exports = {
       }, '')
       : '';
 
+    // create the runtime string from movieData.runtime
     const runtimeString = movieData.runtime
       ? `${Math.floor(movieData.runtime / 60)}h ${movieData.runtime % 60}m`
       : '';
 
+    // set the embed fields
     movieEmbed.setTitle(movieData.title);
     if (runtimeString.length > 0) {movieEmbed.setTitle(movieEmbed.title + ' (' + runtimeString + ')');}
     movieEmbed.setURL(`https://www.imdb.com/title/${movieData.imdb_id}/`);
@@ -137,6 +149,7 @@ module.exports = {
     else movieEmbed.addField('AzzFlix', ':x:', true);
     if (castData.actors) movieEmbed.addField('Actors', castData.actors);
 
+    // send the embed
     await interaction.reply({ embeds: [movieEmbed] });
   },
 };

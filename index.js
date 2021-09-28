@@ -20,16 +20,20 @@ const client = new Client({
   ],
 });
 
+// create collection to hold commands
 client.commands = new Collection();
 
+// read directory with commands
 const commandFiles = fs
   .readdirSync('./commands')
   .filter((file) => file.endsWith('.js'));
 
+// read directory with event handlers
 const eventFiles = fs
   .readdirSync('./events')
   .filter((file) => file.endsWith('.js'));
 
+// load commands
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   // Set a new item in the Collection
@@ -37,6 +41,7 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command);
 }
 
+// load event handlers
 for (const file of eventFiles) {
   const event = require(`./events/${file}`);
   if (event.once) {

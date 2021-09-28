@@ -6,10 +6,10 @@
   // set this to true if you want to deploy commands to all the server the bot is in when it starts up
   // you should set this to false if you plan on deploying commands globally anyway
   // the discord api doesn't like spam of this so please disable if you keep restarting the bot
-  "deployCommands": false
+  "deployCommands": false,
   // db config
   "db": {
     "uri": "mongodb://localhost/randomName",
-    "modelName": "randomName2",
+    "modelName": "randomName2"
   }
 }

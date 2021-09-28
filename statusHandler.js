@@ -6,7 +6,7 @@ const statuses = [
   // 2 -> Listening to {string}
   ['Spotify', 2], ['Lofi', 2],
   // 3 -> Watching {string}
-  ['online classes', 3], ['you lose icicles', 3] ['you win icicles', 3],
+  ['online classes', 3], ['you lose icicles', 3], ['you win icicles', 3],
   // 5 -> Competing in {string}
   ['a bot gauntlet', 5],
 ];

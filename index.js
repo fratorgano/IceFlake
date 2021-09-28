@@ -3,6 +3,7 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token, db } = require('./config.json');
 const MonHandler = require('./mon/monHandler.js');
 const iciclesSchema = require('./mon/monIcicles.js');
+const statusHandler = require('./statusHandler.js');
 
 // setting up db
 // create a new mongodb handler
@@ -45,6 +46,12 @@ for (const file of eventFiles) {
     client.on(event.name, (...args) => event.execute(...args));
   }
 }
+
+// Handling custom statuses
+setInterval(() => {
+  const [status, options] = statusHandler.getStatus();
+  client.user.setActivity(status, options);
+}, 600000);
 
 // Login to Discord with your client's token
 client.login(token);

@@ -10,6 +10,8 @@ module.exports = {
     // Check if the interaction is available
     if (!interaction.isCommand()) return;
 
+    console.log(`${interaction.member.guild.name}, ${interaction.user.username} -> ${interaction.commandName}`);
+
     // Check if the command exists
     const command = client.commands.get(interaction.commandName);
     if (!command) return;

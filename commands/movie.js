@@ -24,6 +24,9 @@ module.exports = {
         .setRequired(false),
     ),
   async execute(interaction) {
+    // Using deferReply because the movie search might take some time
+    await interaction.deferReply();
+
     // Get the movie title and year
     const language = 'en-US';
     const movietitle = interaction.options.getString('movietitle');
@@ -150,6 +153,6 @@ module.exports = {
     if (castData.actors) movieEmbed.addField('Actors', castData.actors);
 
     // send the embed
-    await interaction.reply({ embeds: [movieEmbed] });
+    await interaction.editReply({ embeds: [movieEmbed] });
   },
 };
